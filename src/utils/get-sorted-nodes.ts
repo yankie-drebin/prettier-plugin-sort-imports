@@ -51,10 +51,10 @@ export const getSortedNodes: GetSortedNodes = (nodes, options) => {
         importOrderGroups[matchedGroup].push(node);
     }
 
-    for (const group of importOrder) {
+    importOrder.forEach((group, index) => {
         const groupNodes = importOrderGroups[group];
 
-        if (groupNodes.length === 0) continue;
+        if (groupNodes.length === 0) return;
 
         const sortedInsideGroup = getSortedNodesGroup(groupNodes, {
             importOrderGroupNamespaceSpecifiers,
@@ -68,16 +68,13 @@ export const getSortedNodes: GetSortedNodes = (nodes, options) => {
         }
 
         finalNodes.push(...sortedInsideGroup);
-
-        if (importOrderSeparation) {
-            finalNodes.push(newLineNode);
-        }
-    }
-
-    if (finalNodes.length > 0 && !importOrderSeparation) {
-        // a newline after all imports
-        finalNodes.push(newLineNode);
-    }
+        const addNewLine =
+            importOrderSeparation === true ||
+            (Array.isArray(importOrderSeparation) &&
+                importOrderSeparation.includes(index + 1)) ||
+            index === importOrder.length - 1;
+        if (addNewLine) finalNodes.push(newLineNode);
+    });
 
     // maintain a copy of the nodes to extract comments from
     const finalNodesClone = finalNodes.map(clone);
