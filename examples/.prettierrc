@@ -6,6 +6,6 @@
     "jsxBracketSameLine": true,
     "semi": true,
     "importOrder": ["^@server/(.*)$", "^@core/(.*)$", "^@ui/(.*)$", "^[./]"],
-    "importOrderSeparation": true,
+    "importOrderSeparation": [1, 2, 3],
     "importOrderSortSpecifiers": true
 }

@@ -5,6 +5,7 @@ import { parsers as typescriptParsers } from 'prettier/parser-typescript';
 
 import { defaultPreprocessor } from './preprocessors/default-processor';
 import { vuePreprocessor } from './preprocessors/vue-preprocessor';
+import { IntArraySupportOption } from 'prettier';
 
 const options = {
     importOrder: {
@@ -30,11 +31,13 @@ const options = {
         description: 'Provide a list of plugins for special syntax',
     },
     importOrderSeparation: {
-        type: 'boolean',
+        type: 'int',
         category: 'Global',
-        default: false,
+        default: [],
         description: 'Should imports be separated by new line?',
-    },
+        array: true,
+        since: '3.0.0',
+    } as IntArraySupportOption,
     importOrderGroupNamespaceSpecifiers: {
         type: 'boolean',
         category: 'Global',

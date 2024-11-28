@@ -81,7 +81,7 @@ module.exports = {
   "singleQuote": true,
   "semi": true,
   "importOrder": ["^@core/(.*)$", "^@server/(.*)$", "^@ui/(.*)$", "^[./]"],
-  "importOrderSeparation": true,
+  "importOrderSeparation": [],
   "importOrderSortSpecifiers": true
 }
 ```
@@ -124,7 +124,7 @@ A boolean value to enable or disable the new line separation
 between sorted import declarations group. The separation takes place according to the `importOrder`.
 
 ```
-"importOrderSeparation": true,
+"importOrderSeparation": [],
 ```
 
 #### `importOrderSortSpecifiers`

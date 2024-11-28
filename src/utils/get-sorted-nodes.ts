@@ -69,9 +69,7 @@ export const getSortedNodes: GetSortedNodes = (nodes, options) => {
 
         finalNodes.push(...sortedInsideGroup);
         const addNewLine =
-            importOrderSeparation === true ||
-            (Array.isArray(importOrderSeparation) &&
-                importOrderSeparation.includes(index + 1)) ||
+            importOrderSeparation?.includes(index + 1) ||
             index === importOrder.length - 1;
         if (addNewLine) finalNodes.push(newLineNode);
     });

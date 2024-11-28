@@ -23,14 +23,11 @@ export interface PluginConfig {
     importOrder: string[];
 
     /**
-     * A boolean value to enable or disable the new line separation
-     * between sorted import declarations group. The separation takes place according to the `importOrder`.
-     *
-     * Can also be a number array which would correspond to the indexes of the `importOrder` array.
+     * A number array which would correspond to the indexes of the `importOrder` array.
      * For example, you can pass in `[1, 3]` to separate before the first and third index of the `importOrder` array.
-     * @default false
+     * @default []
      */
-    importOrderSeparation?: boolean | number[];
+    importOrderSeparation?: number[];
 
     /**
      * A boolean value to enable or disable sorting of the specifiers in an import declarations.
