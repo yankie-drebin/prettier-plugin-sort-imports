@@ -1,7 +1,11 @@
 import { addComments, removeComments } from '@babel/types';
 import { clone, isEqual } from 'lodash';
 
-import { THIRD_PARTY_MODULES_SPECIAL_WORD, newLineNode } from '../constants';
+import {
+    NEW_LINE_SPECIAL_WORD,
+    THIRD_PARTY_MODULES_SPECIAL_WORD,
+    newLineNode,
+} from '../constants';
 import { naturalSort } from '../natural-sort';
 import { GetSortedNodes, ImportGroups, ImportOrLine } from '../types';
 import { getImportNodesMatchedGroup } from './get-import-nodes-matched-group';
@@ -25,10 +29,9 @@ export const getSortedNodes: GetSortedNodes = (nodes, options) => {
     } = options;
 
     const originalNodes = nodes.map(clone);
-    const finalNodes: ImportOrLine[] = [];
 
     if (!importOrder.includes(THIRD_PARTY_MODULES_SPECIAL_WORD)) {
-        importOrder = [THIRD_PARTY_MODULES_SPECIAL_WORD, ...importOrder];
+        importOrder.unshift(THIRD_PARTY_MODULES_SPECIAL_WORD);
     }
 
     const importOrderGroups = importOrder.reduce<ImportGroups>(
@@ -40,7 +43,9 @@ export const getSortedNodes: GetSortedNodes = (nodes, options) => {
     );
 
     const importOrderWithOutThirdPartyPlaceholder = importOrder.filter(
-        (group) => group !== THIRD_PARTY_MODULES_SPECIAL_WORD,
+        (group) =>
+            group !== THIRD_PARTY_MODULES_SPECIAL_WORD &&
+            group !== NEW_LINE_SPECIAL_WORD,
     );
 
     for (const node of originalNodes) {
@@ -51,33 +56,36 @@ export const getSortedNodes: GetSortedNodes = (nodes, options) => {
         importOrderGroups[matchedGroup].push(node);
     }
 
-    for (const group of importOrder) {
-        const groupNodes = importOrderGroups[group];
+    const finalNodes = importOrder
+        .filter(
+            (group) =>
+                importOrderGroups[group].length ||
+                group === NEW_LINE_SPECIAL_WORD,
+        )
+        .reduce<ImportOrLine[]>((acc, group, index) => {
+            if (group === NEW_LINE_SPECIAL_WORD) {
+                return [...acc, newLineNode];
+            }
+            const groupNodes = importOrderGroups[group];
+            if (groupNodes.length === 0) {
+                return acc;
+            }
+            const sortedInsideGroup = getSortedNodesGroup(groupNodes, {
+                importOrderGroupNamespaceSpecifiers,
+            });
 
-        if (groupNodes.length === 0) continue;
-
-        const sortedInsideGroup = getSortedNodesGroup(groupNodes, {
-            importOrderGroupNamespaceSpecifiers,
-        });
-
-        // Sort the import specifiers
-        if (importOrderSortSpecifiers) {
-            sortedInsideGroup.forEach((node) =>
-                getSortedImportSpecifiers(node),
-            );
-        }
-
-        finalNodes.push(...sortedInsideGroup);
-
-        if (importOrderSeparation) {
-            finalNodes.push(newLineNode);
-        }
-    }
-
-    if (finalNodes.length > 0 && !importOrderSeparation) {
-        // a newline after all imports
-        finalNodes.push(newLineNode);
-    }
+            // Sort the import specifiers
+            if (importOrderSortSpecifiers) {
+                sortedInsideGroup.forEach((node) =>
+                    getSortedImportSpecifiers(node),
+                );
+            }
+            acc.push(...sortedInsideGroup);
+            if (importOrderSeparation || index === importOrder.length - 1) {
+                acc.push(newLineNode);
+            }
+            return acc;
+        }, []);
 
     // maintain a copy of the nodes to extract comments from
     const finalNodesClone = finalNodes.map(clone);

@@ -22,7 +22,7 @@ import a from 'a';
     const sortedNodes = getSortedNodes(importNodes, {
         importOrder: [],
         importOrderCaseInsensitive: false,
-        importOrderSeparation: [],
+        importOrderSeparation: false,
         importOrderGroupNamespaceSpecifiers: false,
         importOrderSortSpecifiers: false,
     });

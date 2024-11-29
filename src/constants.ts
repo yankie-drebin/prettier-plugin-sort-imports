@@ -15,6 +15,8 @@ export const sortImportsIgnoredComment = 'sort-imports-ignore';
  */
 export const THIRD_PARTY_MODULES_SPECIAL_WORD = '<THIRD_PARTY_MODULES>';
 
+export const NEW_LINE_SPECIAL_WORD = '<NEW_LINE>';
+
 const PRETTIER_PLUGIN_SORT_IMPORTS_NEW_LINE =
     'PRETTIER_PLUGIN_SORT_IMPORTS_NEW_LINE';
 

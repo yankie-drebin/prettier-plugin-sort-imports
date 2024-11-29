@@ -22,7 +22,7 @@ test('it should remove nodes from the original code', () => {
     const sortedNodes = getSortedNodes(importNodes, {
         importOrder: [],
         importOrderCaseInsensitive: false,
-        importOrderSeparation: [],
+        importOrderSeparation: false,
         importOrderGroupNamespaceSpecifiers: false,
         importOrderSortSpecifiers: false,
     });
