@@ -104,7 +104,7 @@ dist
 .tern-port
 
 # Build files
-lib/
+# lib/
 
 .idea
 
